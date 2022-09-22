@@ -163,6 +163,9 @@ const DialogView = View.extend({
   ui: {
     input: '.js-input',
   },
+  childViewTriggers: {
+    'close': 'close',
+  },
   regionClass: Region.extend({ replaceElement: true }),
   regions: {
     header: '[data-header-region]',
