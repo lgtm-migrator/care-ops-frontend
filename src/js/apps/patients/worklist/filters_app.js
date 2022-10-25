@@ -49,8 +49,12 @@ export default App.extend({
 
     const filterState = sidebar.getState();
 
-    this.listenTo(filterState, 'change', () => {
-      this.setState(filterState.attributes);
+    this.listenTo(filterState, 'change', (stateModel, { unset }) => {
+      if (unset) {
+        this.getState().clear();
+        return;
+      }
+      this.setState(stateModel.attributes);
     });
 
     sidebar.listenTo(this.getState(), 'change', () => {
