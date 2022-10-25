@@ -8,6 +8,8 @@ import Radio from 'backbone.radio';
 
 import { STATE_STATUS, RELATIVE_DATE_RANGES } from 'js/static';
 
+export const STATE_VERSION = 'v3';
+
 const relativeRanges = new Backbone.Collection(RELATIVE_DATE_RANGES);
 
 export default Backbone.Model.extend({
@@ -49,7 +51,7 @@ export default Backbone.Model.extend({
     this.on('change', this.onChange);
   },
   onChange() {
-    store.set(`${ this.id }_${ this.currentClinician.id }-v2`, omit(this.attributes, 'searchQuery', 'isFiltering'));
+    store.set(`${ this.id }_${ this.currentClinician.id }-${ STATE_VERSION }`, omit(this.attributes, 'searchQuery', 'isFiltering'));
   },
   setDateFilters(filters) {
     return this.set(`${ this.getType() }DateFilters`, clone(filters));

@@ -9,7 +9,7 @@ import intl, { renderTemplate } from 'js/i18n';
 
 import App from 'js/base/app';
 
-import StateModel from './worklist_state';
+import StateModel, { STATE_VERSION } from './worklist_state';
 
 import FiltersApp from './filters_app';
 import BulkEditActionsApp from 'js/apps/patients/sidebar/bulk-edit-actions_app';
@@ -51,7 +51,7 @@ export default App.extend({
   },
   initListState() {
     const currentUser = Radio.request('bootstrap', 'currentUser');
-    const storedState = store.get(`${ this.worklistId }_${ currentUser.id }-v2`);
+    const storedState = store.get(`${ this.worklistId }_${ currentUser.id }-${ STATE_VERSION }`);
     const filters = this.getState('filters');
 
     if (storedState) {
