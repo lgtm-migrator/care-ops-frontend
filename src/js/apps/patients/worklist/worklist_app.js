@@ -142,10 +142,6 @@ export default App.extend({
     this.listenTo(filtersApp, 'toggle:filtersSidebar', isSidebarOpen => {
       this.setState('isFiltering', isSidebarOpen);
     });
-
-    this.listenTo(filtersApp, 'reset:filters:state', () => {
-      this.getState().resetFilters();
-    });
   },
   toggleBulkSelect() {
     this.selected = this.getState().getSelected(this.filteredCollection);
@@ -294,11 +290,11 @@ export default App.extend({
     this.showChildView('table', tableHeadersView);
   },
   showListTitle() {
-    const filters = this.getState().getFilters();
-    const owner = Radio.request('entities', 'clinicians:model', filters.clinicianId);
-    const team = Radio.request('entities', 'teams:model', filters.teamId);
+    const owner = Radio.request('entities', 'clinicians:model', this.getState('clinicianId'));
+    const team = Radio.request('entities', 'teams:model', this.getState('teamId'));
 
     const showOwnerDroplist = (this.shouldShowClinician && this.canViewAssignedActions) || this.shouldShowTeam;
+    const shouldShowOwnerToggle = this.getState().id === 'shared-by' && this.canViewAssignedActions;
 
     const listTitleView = this.showChildView('title', new ListTitleView({
       owner,
@@ -308,38 +304,40 @@ export default App.extend({
       showOwnerDroplist,
     }));
 
-    if (showOwnerDroplist) {
-      const ownerDroplistView = listTitleView.showChildView('owner', new OwnerDroplist(this.getOwnerFilterOptions(owner, team)));
+    if (showOwnerDroplist) this.showOwnerDroplist(listTitleView, owner, team);
+    if (shouldShowOwnerToggle) this.showOwnerToggle(listTitleView);
+  },
+  showOwnerDroplist(listTitleView, owner, team) {
+    const ownerDroplistView = new OwnerDroplist(this.getOwnerFilterOptions(owner, team));
 
-      this.listenTo(ownerDroplistView, {
-        'change:owner'({ id, type }) {
-          if (type === 'teams') {
-            this.setState({ filters: { ...filters, teamId: id, clinicianId: null } });
-          } else {
-            this.setState({ filters: { ...filters, clinicianId: id, teamId: null } });
-          }
-        },
-      });
-    }
+    this.listenTo(ownerDroplistView, {
+      'change:owner'({ id, type }) {
+        if (type === 'teams') {
+          this.setState({ teamId: id, clinicianId: null });
+        } else {
+          this.setState({ clinicianId: id, teamId: null });
+        }
+      },
+    });
 
-    const shouldShowOwnerToggle = this.getState().id === 'shared-by' && this.canViewAssignedActions;
+    listTitleView.showChildView('owner', ownerDroplistView);
+  },
+  showOwnerToggle(listTitleView) {
+    const ownerToggleView = new NoOwnerToggleView({
+      model: this.getState(),
+    });
 
-    if (shouldShowOwnerToggle) {
-      const ownerToggleView = listTitleView.showChildView('ownerToggle', new NoOwnerToggleView({
-        model: new Backbone.Model(filters),
-      }));
+    this.listenTo(ownerToggleView, 'click', () => {
+      this.toggleState('noOwner');
+    });
 
-      this.listenTo(ownerToggleView, 'click', () => {
-        const noOwner = this.getState().getFilters().noOwner;
-        this.setState({ filters: { ...filters, noOwner: !noOwner } });
-      });
-    }
+    listTitleView.showChildView('ownerToggle', ownerToggleView);
   },
   getOwnerFilterOptions(owner, team) {
-    const filters = this.getState().getFilters();
+    const clinicianId = this.getState('clinicianId');
 
     const options = {
-      owner: this.shouldShowClinician && filters.clinicianId ? owner : team,
+      owner: this.shouldShowClinician && clinicianId ? owner : team,
       groups: this.shouldShowClinician && this.canViewAssignedActions ? this.groups : null,
       isTitleFilter: true,
       headingText: this.shouldShowClinician ? i18n.ownerFilterHeadingText : i18n.teamsFilterHeadingText,

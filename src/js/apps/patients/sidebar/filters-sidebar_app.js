@@ -5,7 +5,7 @@ import App from 'js/base/app';
 import { LayoutView, CustomFiltersView, groupLabelView } from 'js/views/patients/sidebar/filters/filters-sidebar_views';
 
 export default App.extend({
-  onStart({ state }, directories) {
+  onStart() {
     this.currentClinician = Radio.request('bootstrap', 'currentUser');
     this.directories = Radio.request('bootstrap', 'currentOrg:directories');
 
@@ -39,7 +39,6 @@ export default App.extend({
   },
   onClearFilters() {
     this.getState().clear();
-    this.triggerMethod('reset:filters:state');
   },
   onStop() {
     Radio.request('sidebar', 'close');

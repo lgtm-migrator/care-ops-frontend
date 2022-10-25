@@ -30,12 +30,10 @@ export default Backbone.Model.extend({
         relativeDate: null,
       },
       isFiltering: false,
-      filters: {
-        groupId: null,
-        clinicianId: this.currentClinician.id,
-        teamId: this.currentClinician.getTeam().id,
-        noOwner: false,
-      },
+      filters: {},
+      clinicianId: this.currentClinician.id,
+      teamId: this.currentClinician.getTeam().id,
+      noOwner: false,
       lastSelectedIndex: null,
       selectedActions: {},
       selectedFlows: {},
@@ -61,9 +59,6 @@ export default Backbone.Model.extend({
   },
   getFilters() {
     return clone(this.get('filters'));
-  },
-  resetFilters() {
-    this.set('filters', this.defaults().filters);
   },
   getType() {
     return this.get('listType');
@@ -110,10 +105,12 @@ export default Backbone.Model.extend({
     };
   },
   getEntityFilter() {
-    const customFilters = omit(this.getFilters(), 'groupId', 'clinicianId', 'teamId', 'noOwner');
-
-    const { groupId, clinicianId, teamId, noOwner } = this.getFilters();
-    const group = groupId || this.groups.pluck('id').join(',');
+    const filtersState = this.getFilters();
+    const clinicianId = this.get('clinicianId');
+    const teamId = this.get('teamId');
+    const noOwner = this.get('noOwner');
+    const customFilters = omit(filtersState, 'groupId');
+    const group = filtersState.groupId || this.groups.pluck('id').join(',');
     const status = [STATE_STATUS.QUEUED, STATE_STATUS.STARTED].join(',');
 
     const dateFilter = this.getEntityDateFilter();

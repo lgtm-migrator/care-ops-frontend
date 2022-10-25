@@ -60,10 +60,6 @@ export default App.extend({
     this.listenTo(sidebar, 'stop', () => {
       this.trigger('toggle:filtersSidebar', false);
     });
-
-    this.listenTo(sidebar, 'reset:filters:state', () => {
-      this.trigger('reset:filters:state');
-    });
   },
   showGroupsFilterView() {
     if (this.groups.length < 2) return;
