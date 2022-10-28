@@ -1,0 +1,142 @@
+$dot-count: 16;
+$dot-size: 8px;
+$dot-space: 16px;
+$dot-start: math.div((math.div($dot-count, 2) + 1) * ($dot-size + $dot-space), 2);
+$animation-time: 2s;
+$animation-distance: 25px;
+
+.loader__ellipsis {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: bottom;
+}
+
+.loader__ellipsis::after {
+  animation: loader-ellipsis-keyframes 1.2s steps(4, jump-none) infinite;
+  content: '...';
+  display: inline-block;
+}
+
+.loader__text {
+  animation: 0.5s ease 0.5s fade-in forwards;
+  bottom: 64px;
+  color: $black-40;
+  font-size: 20px;
+  margin-left: 16px;
+  opacity: 0;
+  position: absolute;
+  text-align: center;
+  width: 100%;
+}
+
+.loader {
+  left: 50%;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.loader__dot {
+  animation-duration: $animation-time;
+  animation-iteration-count: infinite;
+  animation-name: movement;
+  animation-timing-function: ease-in-out;
+  height: $dot-size;
+  position: absolute;
+  top: -#{$dot-size};
+  transform: translate3d(0, -#{$animation-distance}, 0) scale(1);
+  width: $dot-size;
+
+  @for $i from 1 through $dot-count {
+    $dot-move: math.ceil(math.div($i, 2));
+    $dot-pos: $dot-start - (($dot-size + $dot-space) * $dot-move);
+    $animation-delay: -#{$i * 0.1}s;
+
+    @if $i % 2 == 0 {
+      $animation-delay: -#{($i * 0.1) + math.div($animation-time, 2)};
+    }
+
+    &:nth-of-type(#{$i}) {
+      animation-delay: $animation-delay;
+      left: $dot-pos;
+
+      &::before {
+        animation-delay: $animation-delay;
+      }
+    }
+  }
+
+  &::before {
+    animation-duration: $animation-time;
+    animation-iteration-count: infinite;
+    animation-name: size-opacity;
+    animation-timing-function: ease;
+    background: $black-85;
+    border-radius: 50%;
+    content: '';
+    display: block;
+    height: 100%;
+    width: 100%;
+  }
+
+  &:nth-of-type(even)::before {
+    background-color: $bkg-color;
+    box-shadow: inset 0 0 4px color.adjust($bkg-color, $lightness: -10%);
+  }
+}
+
+@keyframes loader-ellipsis-keyframes {
+  0% { transform: translateX(-100%); }
+}
+
+@keyframes movement {
+  0% {
+    transform: translate3d(0, -#{$animation-distance}, 0);
+    z-index: 0;
+  }
+
+  50% {
+    transform: translate3d(0, #{$animation-distance}, 0);
+    z-index: 10;
+  }
+
+  100% {
+    transform: translate3d(0, -#{$animation-distance}, 0);
+    z-index: -5;
+  }
+}
+
+@keyframes size-opacity {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  25% {
+    transform: scale(1.5);
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  75% {
+    opacity: 0.35;
+    transform: scale(0.5);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}

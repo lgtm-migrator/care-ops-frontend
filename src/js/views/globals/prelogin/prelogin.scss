@@ -1,0 +1,111 @@
+body {
+  margin: 0;
+}
+
+.prelogin * {
+  border: 0;
+  box-sizing: border-box;
+}
+
+.prelogin {
+  align-items: center;
+  background-color: $bkg-color;
+  box-sizing: border-box;
+  color: $black-20;
+  display: flex;
+  flex-direction: column;
+  font-family: ProximaSoft, 'Droid Sans', 'helvetica neue', arial, sans-serif;
+  font-size: 14px;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  height: 100vh;
+  justify-content: top;
+  line-height: 20px;
+  margin: 0;
+  vertical-align: baseline;
+  width: 100%;
+}
+
+.prelogin__roundingwell-logo {
+  margin: 56px 0;
+}
+
+@keyframes blow-up-modal {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(30%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0%);
+  }
+}
+
+.prelogin__content {
+  background-color: $white;
+  border-radius: 4px;
+  color: $black-20;
+  line-height: 2.6em;
+  min-height: 380px;
+  padding: 48px 0;
+  position: relative;
+  text-align: center;
+  width: 620px;
+
+  &.is-animated {
+    animation: blow-up-modal 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    opacity: 0;
+  }
+}
+
+.prelogin__header {
+  font-size: 28px;
+  font-weight: 400;
+  margin: 16px 0;
+}
+
+.prelogin__host {
+  font-size: 24px;
+  font-weight: 400;
+  margin-top: 40px;
+}
+
+.prelogin__continue-button {
+  margin-top: 48px;
+
+  .fa-right-to-bracket {
+    display: inline-block;
+    font-size: 20px;
+    height: 1em;
+    margin-left: 4px;
+    vertical-align: -4px;
+  }
+}
+
+.prelogin__contact-info {
+  color: $black-60;
+  margin-top: 40px;
+}
+
+.prelogin__contact-info a {
+  color: color(blue);
+  text-decoration: none;
+}
+
+.prelogin__message-header {
+  color: $warning-color;
+  margin-bottom: 32px;
+
+  .icon {
+    font-size: 32px;
+  }
+}
+
+.prelogin__message {
+  color: $black-20;
+  font-size: 28px;
+  line-height: 40px;
+  padding: 16px 80px;
+  text-align: center;
+}

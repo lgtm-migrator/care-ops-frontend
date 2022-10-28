@@ -1,16 +1,19 @@
+import { range } from 'underscore';
 import { View } from 'marionette';
 
-import PreloadRegion from 'js/regions/preload_region';
-
+import 'scss/core/_fonts.scss';
+import 'scss/modules/buttons.scss';
 import 'scss/modules/fill-window.scss';
+import 'scss/modules/loader.scss';
 
 import PreloginTemplate from './prelogin.hbs';
 import LoginPromptTemplate from './login-prompt.hbs';
 import NotSetupTemplate from './not-setup.hbs';
 
-import './prelogin.css';
+import './prelogin.scss';
 
 const LoginView = View.extend({
+  className: 'prelogin__content',
   triggers: {
     'click .js-login': 'click:login',
   },
@@ -30,7 +33,7 @@ const LoginPromptView = View.extend({
   regions: {
     content: {
       el: '[data-content-region]',
-      regionClass: PreloadRegion,
+      replaceElement: true,
     },
   },
   template: PreloginTemplate,
@@ -47,10 +50,7 @@ const NotSetupView = View.extend({
 const PreloaderView = View.extend({
   className: 'prelogin fill-window',
   regions: {
-    content: {
-      el: '[data-content-region]',
-      regionClass: PreloadRegion,
-    },
+    content: '[data-content-region]',
   },
   template: PreloginTemplate,
   onRender() {
@@ -58,8 +58,9 @@ const PreloaderView = View.extend({
       this.showChildView('content', new NotSetupView());
       return;
     }
-
-    this.getRegion('content').startPreloader();
+  },
+  templateContext: {
+    dots: range(16),
   },
 });
 
