@@ -70,9 +70,10 @@ const PreloaderRegionView = TopRegionView.extend({
 });
 
 const ModalRegionView = TopRegionView.extend({
+  className: 'fill-window--dark',
   behaviors: [{
     behaviorClass: TopRegionBehavior,
-    className: 'fill-window--dark',
+    className: 'is-shown',
   }],
   initialize({ $body }) {
     this.region = this.getRegion('region');
