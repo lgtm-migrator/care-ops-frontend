@@ -112,12 +112,15 @@ export default App.extend({
         const saveButtonType = this.getState('saveButtonType');
 
         if (saveButtonType === 'saveAndGoBack') {
-          Radio.request('history', 'go:back');
-          return;
+          this.listenTo(this.loadingModal, 'destroy', () => {
+            Radio.request('history', 'go:back');
+          });
         }
 
-        this.showFormStatus();
-        this.showFormUpdate();
+        if (saveButtonType !== 'saveAndGoBack') {
+          this.showFormStatus();
+          this.showFormUpdate();
+        }
       },
       'ready'() {
         this.showFormSave();
@@ -283,6 +286,12 @@ export default App.extend({
       'click:save'() {
         Radio.request(`form${ this.form.id }`, 'send', 'form:submit');
         this.showFormSaveDisabled();
+
+        const saveButtonType = this.getState('saveButtonType');
+
+        if (saveButtonType === 'saveAndGoBack') {
+          this.loadingModal = Radio.request('modal', 'show:loading', { timeout: 5000 });
+        }
       },
       'select:button:type'(selectedSaveButtonType) {
         this.setState({ saveButtonType: selectedSaveButtonType });

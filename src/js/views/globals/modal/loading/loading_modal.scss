@@ -1,0 +1,32 @@
+.loading-modal__wrapper {
+  position: absolute;
+}
+
+@keyframes blow-up-modal {
+  0% {
+    opacity: 0;
+    transform: scale(0.5) translateY(30%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0%);
+  }
+}
+
+.loading-modal__content {
+  background-color: $white;
+  border-radius: 4px;
+  color: $black-20;
+  line-height: 2.6em;
+  min-height: 380px;
+  padding: 48px 0;
+  position: relative;
+  text-align: center;
+  width: 544px;
+
+  &.is-animated {
+    animation: blow-up-modal 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+    opacity: 0;
+  }
+}

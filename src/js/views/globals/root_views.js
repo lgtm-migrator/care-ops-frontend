@@ -114,6 +114,12 @@ const ModalRegionView = TopRegionView.extend({
   },
 });
 
+const ModalLoadingRegionView = ModalRegionView.extend({
+  contains() {
+    return true;
+  },
+});
+
 const ModalSidebarRegionView = ModalRegionView.extend({
   setLocation: noop,
 });
@@ -310,6 +316,7 @@ const RootView = CollectionView.extend({
     this.addRegionView('modalSidebar', new ModalSidebarRegionView({ $body }));
     this.addRegionView('modal', new ModalRegionView({ $body }));
     this.addRegionView('modalSmall', new ModalRegionView({ $body }));
+    this.addRegionView('modalLoading', new ModalLoadingRegionView({ $body }));
     this.addRegionView('alert', new TopRegionView());
     this.addRegionView('pop', new PopRegionView({ $body }));
     this.addRegionView('preloader', new PreloaderRegionView());
